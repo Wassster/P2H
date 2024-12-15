@@ -9,9 +9,9 @@ import java.sql.Date;
 
         @Id
         @Column(name= "reiziger_id")
-        private Long id;
+        private int id;
 
-        @Column(name = "voorletter", nullable = false)
+        @Column(name = "voorletters", nullable = false)
         private String voorletter;
 
         @Column(name = "tussenvoegsel", nullable = true)
@@ -23,11 +23,8 @@ import java.sql.Date;
         @Column(name = "geboortedatum")
         private Date geboorteDatum;
 
-        @Version
-        @Column(name = "version")
-        private int version;
 
-        public Reiziger(Long id, String voorletter, String tussenvoegsel, String achternaam, Date geboorteDatum) {
+        public Reiziger(int id, String voorletter, String tussenvoegsel, String achternaam, Date geboorteDatum) {
             this.id = id;
             this.voorletter = voorletter;
             this.tussenvoegsel = tussenvoegsel;
@@ -37,7 +34,7 @@ import java.sql.Date;
 
         public Reiziger() {}
 
-        public Long getId() {
+        public int getId() {
             return id;
         }
 
@@ -61,7 +58,7 @@ import java.sql.Date;
             this.achternaam = achternaam;
         }
 
-        public void setId(Long id) {
+        public void setId(int id) {
             this.id = id;
         }
 

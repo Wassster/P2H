@@ -6,6 +6,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ReizigerDAOHibernate implements ReizigerDAO {
@@ -40,7 +41,7 @@ public class ReizigerDAOHibernate implements ReizigerDAO {
 
 
     @Override
-    public Reiziger findById(Long id) {
+    public Reiziger findById(int id) {
         try (Session session = sessionFactory.openSession()) {
             return session.get(Reiziger.class, id);
         } catch (Exception e) {
@@ -56,7 +57,7 @@ public class ReizigerDAOHibernate implements ReizigerDAO {
             return query.list();
         } catch (Exception e) {
             e.printStackTrace();
-            return null;
+            return new ArrayList<>();
         }
     }
 

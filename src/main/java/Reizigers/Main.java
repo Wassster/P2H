@@ -28,8 +28,6 @@ public class Main {
     }
 
     private static void testReizigerDAO(ReizigerDAO rdao) {
-        System.out.println("\n---------- Test ReizigerDAO -------------");
-
 
         System.out.println("[Test] ReizigerDAO.findAll() geeft de volgende reizigers:");
         List<Reiziger> reizigers = rdao.findAll();
@@ -41,7 +39,7 @@ public class Main {
 
 
         String geboortedatum = "1981-03-14";
-        Reiziger sietske = new Reiziger(77L, "S", null, "Boers", Date.valueOf(geboortedatum));
+        Reiziger sietske = new Reiziger(77, "S", null, "Boers", Date.valueOf(geboortedatum));
         System.out.print("\n[Test] ReizigerDAO.save() - Voeg Sietske Boers toe: ");
         boolean saved = rdao.save(sietske);
         if (saved) {
@@ -57,7 +55,7 @@ public class Main {
 
 
         System.out.println("\n[Test] ReizigerDAO.update() - Wijzig achternaam van Sietske Boers naar Jansen:");
-        Reiziger toUpdate = rdao.findById(77L);
+        Reiziger toUpdate = rdao.findById(77);
         if (toUpdate != null) {
             toUpdate.setAchternaam("Jansen");
             boolean updated = rdao.update(toUpdate);
@@ -68,7 +66,7 @@ public class Main {
 
 
         System.out.println("\n[Test] ReizigerDAO.findById(77L):");
-        Reiziger updatedReiziger = rdao.findById(77L);
+        Reiziger updatedReiziger = rdao.findById(77);
         System.out.println(updatedReiziger != null ? updatedReiziger : "Geen reiziger gevonden met ID 77.");
 
         System.out.println("\n[Test] ReizigerDAO.delete() - Verwijder Sietske Jansen:");
@@ -84,7 +82,7 @@ public class Main {
             reizigers.forEach(System.out::println);
         }
 
-        System.out.println("\n---------- Test ReizigerDAO Voltooid -------------");
+
     }
 }
 
