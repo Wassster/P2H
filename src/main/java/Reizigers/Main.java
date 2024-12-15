@@ -4,57 +4,89 @@ import Reizigers.DAO.ReizigerDAO;
 import Reizigers.DAO.ReizigerDAOHibernate;
 import Reizigers.Domein.Reiziger;
 import Reizigers.Util.HibernateUtil;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.cfg.Configuration;
 
-import java.sql.SQLException;
+import org.hibernate.SessionFactory;
+
+import java.sql.Date;
 import java.util.List;
 
 public class Main {
-    public static void main(String[] args) throws SQLException {
+    public static void main(String[] args) {
 
 
         SessionFactory factory = HibernateUtil.getSessionFactory();
+        ReizigerDAOHibernate reizigerDAO = new ReizigerDAOHibernate(factory);
 
-        ReizigerDAOHibernate rdao = new ReizigerDAOHibernate(factory);
+        try {
 
-        testReizigerDAO(rdao);
-
-
-        factory.close();
+            testReizigerDAO(reizigerDAO);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            factory.close();
+        }
     }
 
-    private static void testReizigerDAO(ReizigerDAO rdao) throws SQLException {
+    private static void testReizigerDAO(ReizigerDAO rdao) {
         System.out.println("\n---------- Test ReizigerDAO -------------");
 
 
-        List<Reiziger> reizigers = null;
-        reizigers = rdao.findAll();
         System.out.println("[Test] ReizigerDAO.findAll() geeft de volgende reizigers:");
-        for (Reiziger r : reizigers) {
-            System.out.println(r);
+        List<Reiziger> reizigers = rdao.findAll();
+        if (reizigers.isEmpty()) {
+            System.out.println("Geen reizigers gevonden.");
+        } else {
+            reizigers.forEach(System.out::println);
         }
-        System.out.println();
 
 
-        String gbdatum = "1981-03-14";
-        Reiziger sietske = new Reiziger(77, "S", "", "Boers", java.sql.Date.valueOf(gbdatum));
-        System.out.print("[Test] Eerst " + reizigers.size() + " reizigers, na ReizigerDAO.save() ");
-        rdao.save(sietske);
+        String geboortedatum = "1981-03-14";
+        Reiziger sietske = new Reiziger(77L, "S", null, "Boers", Date.valueOf(geboortedatum));
+        System.out.print("\n[Test] ReizigerDAO.save() - Voeg Sietske Boers toe: ");
+        boolean saved = rdao.save(sietske);
+        if (saved) {
+            System.out.println("Gelukt!");
+        } else {
+            System.out.println("Mislukt! Reiziger bestaat mogelijk al.");
+        }
+
+
+        System.out.println("\n[Test] ReizigerDAO.findAll() geeft de volgende reizigers na save:");
         reizigers = rdao.findAll();
-        System.out.println(reizigers.size() + " reizigers\n");
+        reizigers.forEach(System.out::println);
 
 
-        System.out.println("[Test] Update reiziger 77 (Sietske Boers) achternaam naar 'Jansen'");
-        sietske.setAchternaam("Jansen");
-        rdao.update(sietske);
-        Reiziger updatedReiziger = null;
-        updatedReiziger = rdao.findById(77);
-        System.out.println("Geüpdatete reiziger: " + updatedReiziger);
-        System.out.println();
+        System.out.println("\n[Test] ReizigerDAO.update() - Wijzig achternaam van Sietske Boers naar Jansen:");
+        Reiziger toUpdate = rdao.findById(77L);
+        if (toUpdate != null) {
+            toUpdate.setAchternaam("Jansen");
+            boolean updated = rdao.update(toUpdate);
+            System.out.println(updated ? "Update gelukt!" : "Update mislukt!");
+        } else {
+            System.out.println("Reiziger met ID 77 niet gevonden.");
+        }
 
 
-    }}
+        System.out.println("\n[Test] ReizigerDAO.findById(77L):");
+        Reiziger updatedReiziger = rdao.findById(77L);
+        System.out.println(updatedReiziger != null ? updatedReiziger : "Geen reiziger gevonden met ID 77.");
+
+        System.out.println("\n[Test] ReizigerDAO.delete() - Verwijder Sietske Jansen:");
+        boolean deleted = rdao.delete(toUpdate);
+        System.out.println(deleted ? "Verwijdering gelukt!" : "Verwijdering mislukt!");
+
+
+        System.out.println("\n[Test] ReizigerDAO.findAll() geeft de volgende reizigers na delete:");
+        reizigers = rdao.findAll();
+        if (reizigers.isEmpty()) {
+            System.out.println("Geen reizigers gevonden.");
+        } else {
+            reizigers.forEach(System.out::println);
+        }
+
+        System.out.println("\n---------- Test ReizigerDAO Voltooid -------------");
+    }
+}
+
 
 

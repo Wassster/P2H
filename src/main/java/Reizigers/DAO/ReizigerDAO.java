@@ -8,7 +8,7 @@ public interface ReizigerDAO {
 
     boolean save(Reiziger reiziger);
 
-    Reiziger findById(int id);
+    Reiziger findById(Long id);
 
     List<Reiziger> findAll();
 

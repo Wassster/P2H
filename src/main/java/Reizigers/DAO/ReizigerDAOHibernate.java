@@ -21,6 +21,11 @@ public class ReizigerDAOHibernate implements ReizigerDAO {
         Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
+            Reiziger existingReiziger = session.get(Reiziger.class, reiziger.getId());
+            if (existingReiziger != null) {
+                System.out.println("Reiziger with id " + reiziger.getId() + " already exists. Skipping save.");
+                return false;
+            }
             session.save(reiziger);
             transaction.commit();
             return true;
@@ -33,8 +38,9 @@ public class ReizigerDAOHibernate implements ReizigerDAO {
         return false;
     }
 
+
     @Override
-    public Reiziger findById(int id) {
+    public Reiziger findById(Long id) {
         try (Session session = sessionFactory.openSession()) {
             return session.get(Reiziger.class, id);
         } catch (Exception e) {
